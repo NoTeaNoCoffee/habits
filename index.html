@@ -87,6 +87,9 @@
   .kv { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; font-size: 14px; }
   .kv b { font-size: 18px; display: block; }
   .kv span { color: var(--muted); }
+  .prog { margin-top: 10px; font-size: 13px; color: var(--muted); }
+  .pbar { height: 10px; border: 1px solid #000; border-radius: 5px; overflow: hidden; margin-bottom: 4px; background: #fff; }
+  .pbar i { display: block; height: 100%; }
   .tools { display: flex; gap: 8px; margin-top: 16px; }
   .tools button, .tools label { flex: 1; text-align: center; border: 1px solid var(--border); background: #fff; border-radius: 10px; padding: 10px; font-size: 14px; }
   .note { color: var(--muted); font-size: 12px; margin-top: 8px; }
@@ -109,24 +112,32 @@
 
 <script>
 // ---------- Config ----------
-const START = '2026-10-01';               // earliest editable day
+const START = '2026-10-01';        // earliest day you can view/edit
+const STATS_START = '2026-11-01';  // stats and targets count from this day
 const EVERY_DAY = [0, 1, 2, 3, 4, 5, 6];  // Sun=0 ... Sat=6
 const WEEKDAYS = [1, 2, 3, 4, 5];
+
+// ---------- Habits: edit this list to change or add tasks ----------
+// id:     unique short name (never change it once used, or past ticks are lost)
+// days:   EVERY_DAY, WEEKDAYS, or a custom list like [1, 3, 5] (Mon/Wed/Fri)
+// target: number of completed days to finish the series; null = every day, no end
+// start:  optional 'YYYY-MM-DD' for tasks added later (default: START)
+// color, en/zh (full names), sEn/sZh (short names for the narrow weekly grid)
 const HABITS = [
-  { id: 'test',     color: '#FBE6DE', days: EVERY_DAY, en: 'Daily English Test',      zh: '每日英语测试', sEn: 'Eng. Test', sZh: '英语测试' },
-  { id: 'listen',   color: '#CCF1D4', days: WEEKDAYS,  en: 'Daily English Listening', zh: '每日英语听力', sEn: 'Listen',    sZh: '英语听力' },
-  { id: 'exercise', color: '#F3D7F0', days: EVERY_DAY, en: 'Exercise 500 kJ',         zh: '运动500KJ',   sEn: 'Exercise 500kJ', sZh: '运动500KJ' },
-  { id: 'strength', color: '#6FD3F7', days: EVERY_DAY, en: 'Resistance Training',     zh: '抗阻训练',     sEn: 'Strength',   sZh: '抗阻训练' },
+  { id: 'test',     color: '#FBE6DE', days: EVERY_DAY, target: 100,  en: 'Daily English Test',      zh: '每日英语测试', sEn: 'Eng. Test',      sZh: '英语测试' },
+  { id: 'listen',   color: '#CCF1D4', days: WEEKDAYS,  target: 30,   en: 'Daily English Listening', zh: '每日英语听力', sEn: 'Listen',         sZh: '英语听力' },
+  { id: 'exercise', color: '#F3D7F0', days: EVERY_DAY, target: null, en: 'Exercise 500 kJ',         zh: '运动500KJ',   sEn: 'Exercise 500kJ', sZh: '运动500KJ' },
+  { id: 'strength', color: '#6FD3F7', days: EVERY_DAY, target: null, en: 'Resistance Training',     zh: '抗阻训练',     sEn: 'Strength',       sZh: '抗阻训练' },
 ];
 
 const T = {
   en: {
     daily: 'Daily', weekly: 'Weekly', monthly: 'Monthly', stats: 'Stats', title: 'Habits',
     today: 'Today', hint: 'Tap a habit when done · tap again to undo',
-    allDone: 'All done! 😊', note: 'Note', notePh: 'Why something was missed, or anything else…', saved: 'Saved', rest: 'English Listening: weekend off',
+    allDone: 'All done! 😊', note: 'Note', notePh: 'Why something was missed, or anything else…', saved: 'Saved', restDay: 'rest day today', goalDone: 'target reached 🎉', progress: 'Target', doneDays: 'days done', left: 'to go', reachedOn: 'Target reached on', ongoing: 'Every day · no end date',
     tapDay: 'Tap a day to open it in Daily view',
-    legendDone: 'Completed', offDay: 'Not scheduled (weekend listening off)', cur: 'Current streak', best: 'Best streak',
-    month: 'This month', total: 'Since 2026/10/01', days: 'd',
+    legendDone: 'Completed', offDay: 'Not scheduled (rest day or target reached)', cur: 'Current streak', best: 'Best streak',
+    month: 'This month', total: 'Since', days: 'd',
     perfect: 'Perfect days (all habits)', backup: 'Backup',
     exp: 'Export', imp: 'Import', imported: 'Backup imported.', badFile: 'Could not read that file.',
     backupNote: 'Data is stored only on this phone. Export a backup now and then.',
@@ -137,10 +148,10 @@ const T = {
   zh: {
     daily: '日', weekly: '周', monthly: '月', stats: '统计', title: '习惯',
     today: '今天', hint: '完成后点击 · 再点一次取消',
-    allDone: '全部完成！😊', note: '备注', notePh: '未完成的原因，或其他想记录的…', saved: '已保存', rest: '英语听力：周末休息',
+    allDone: '全部完成！😊', note: '备注', notePh: '未完成的原因，或其他想记录的…', saved: '已保存', restDay: '今天休息', goalDone: '目标已达成 🎉', progress: '目标', doneDays: '天已完成', left: '剩余', reachedOn: '目标达成于', ongoing: '每天 · 无结束日期',
     tapDay: '点击某一天可在日视图中编辑',
-    legendDone: '已完成', offDay: '无需完成（周末无听力）', cur: '当前连续', best: '最长连续',
-    month: '本月', total: '自 2026/10/01', days: '天',
+    legendDone: '已完成', offDay: '无需完成（休息日或已达成目标）', cur: '当前连续', best: '最长连续',
+    month: '本月', total: '自', days: '天',
     perfect: '完美天数（全部完成）', backup: '备份',
     exp: '导出', imp: '导入', imported: '备份已导入。', badFile: '无法读取该文件。',
     backupNote: '数据只保存在这部手机上，请不时导出备份。',
@@ -161,7 +172,25 @@ const mondayOf = d => addDays(d, -((d.getDay() + 6) % 7));
 const wdIndex = d => (d.getDay() + 6) % 7; // Mon=0
 const START_DATE = parse(START);
 const inRange = d => d >= START_DATE && d <= todayDate();
-const scheduled = (h, d) => h.days.includes(d.getDay());
+const STATS_DATE = parse(STATS_START);
+const hStart = h => h.start ? parse(h.start) : START_DATE;
+// Day each target series was finished (null = not yet / no target). Recomputed on every render.
+let endCache = null;
+function endOf(h) {
+  if (!endCache) {
+    endCache = {};
+    for (const x of HABITS) {
+      endCache[x.id] = null;
+      if (!x.target) continue;
+      let n = 0;
+      for (let d = new Date(Math.max(hStart(x), STATS_DATE)); d <= todayDate(); d = addDays(d, 1)) {
+        if (x.days.includes(d.getDay()) && isDone(x.id, keyOf(d)) && ++n >= x.target) { endCache[x.id] = d; break; }
+      }
+    }
+  }
+  return endCache[h.id];
+}
+const scheduled = (h, d) => h.days.includes(d.getDay()) && d >= hStart(h) && !(endOf(h) && d > endOf(h));
 
 // ---------- Storage ----------
 const STORE = 'habits.v1';
@@ -218,7 +247,11 @@ function renderDaily() {
     html += `<button class="habit ${d ? 'done' : ''}" style="background:${h.color}" data-habit="${h.id}">
       <span class="name">${esc(name(h))}</span><span class="check">${d ? SMILE : ''}</span></button>`;
   }
-  if (list.length < HABITS.length) html += `<div class="rest">${t('rest')}</div>`;
+  for (const h of HABITS) {
+    if (scheduled(h, cursor) || cursor < hStart(h)) continue;
+    const fin = endOf(h) && cursor > endOf(h);
+    html += `<div class="rest">${esc(name(h))}: ${fin ? t('goalDone') : t('restDay')}</div>`;
+  }
   if (n === list.length) html += `<div class="banner">${t('allDone')}</div>`;
   html += `<div class="note-box"><label for="note">${t('note')}</label>
     <textarea id="note" maxlength="1000" placeholder="${esc(t('notePh'))}">${esc(notes[k] || '')}</textarea>
@@ -248,7 +281,7 @@ function renderWeekly() {
     const k = keyOf(d);
     html += scheduled(h, d)
       ? `<button class="c ${isDone(h.id, k) ? 'done' : ''}" style="background:${h.color}" data-day="${k}">${both(esc(name(h)), esc(h[lang === 'zh' ? 'sZh' : 'sEn']))}</button>`
-      : `<div class="c off">–</div>`;
+      : `<div class="c off">${endOf(h) && d > endOf(h) ? '🎉' : '–'}</div>`;
   }
   $view.innerHTML = html + '</div>';
 }
@@ -277,10 +310,10 @@ function renderMonthly() {
 }
 
 // Streaks count scheduled days only; today not yet done does not break a streak.
-function streaks(isHit, isSched) {
+function streaks(isHit, isSched) { // counted from STATS_START
   let best = 0, run = 0;
   const t0 = todayDate();
-  for (let d = START_DATE; d <= t0; d = addDays(d, 1)) {
+  for (let d = STATS_DATE; d <= t0; d = addDays(d, 1)) {
     if (!isSched(d)) continue;
     if (isHit(d)) { run++; best = Math.max(best, run); } else if (keyOf(d) !== keyOf(t0)) run = 0;
   }
@@ -292,9 +325,18 @@ function rate(isHit, isSched, from) {
   return `${hit}/${all}${all ? ` · ${Math.round(100 * hit / all)}%` : ''}`;
 }
 
+function progress(h) {
+  if (!h.target) return `<div class="prog"><span>${t('ongoing')}</span></div>`;
+  let n = 0;
+  for (let d = STATS_DATE; d <= todayDate(); d = addDays(d, 1)) if (scheduled(h, d) && isDone(h.id, keyOf(d))) n++;
+  const end = endOf(h), pct = Math.min(100, Math.round(100 * n / h.target));
+  return `<div class="prog"><div class="pbar"><i style="width:${pct}%;background:${h.color}"></i></div>
+    <span>${t('progress')} ${n}/${h.target} ${t('doneDays')} · ${end ? `${t('reachedOn')} ${fmt(end)}` : `${h.target - n} ${t('left')}`}</span></div>`;
+}
+
 function renderStats() {
   const t0 = todayDate();
-  const mStart = new Date(Math.max(new Date(t0.getFullYear(), t0.getMonth(), 1), START_DATE));
+  const mStart = new Date(Math.max(new Date(t0.getFullYear(), t0.getMonth(), 1), STATS_DATE));
   let html = '';
   for (const h of HABITS) {
     const hit = d => isDone(h.id, keyOf(d)), sch = d => scheduled(h, d);
@@ -304,8 +346,8 @@ function renderStats() {
         <div><span>${t('cur')}</span><b>${s.cur} ${t('days')}</b></div>
         <div><span>${t('best')}</span><b>${s.best} ${t('days')}</b></div>
         <div><span>${t('month')}</span><b>${rate(hit, sch, mStart)}</b></div>
-        <div><span>${t('total')}</span><b>${rate(hit, sch, START_DATE)}</b></div>
-      </div></div>`;
+        <div><span>${t('total')} ${fmt(STATS_DATE)}</span><b>${rate(hit, sch, STATS_DATE)}</b></div>
+      </div>${progress(h)}</div>`;
   }
   const allHit = d => HABITS.every(h => !scheduled(h, d) || isDone(h.id, keyOf(d)));
   const p = streaks(allHit, () => true);
@@ -313,7 +355,7 @@ function renderStats() {
       <div><span>${t('cur')}</span><b>${p.cur} ${t('days')}</b></div>
       <div><span>${t('best')}</span><b>${p.best} ${t('days')}</b></div>
       <div><span>${t('month')}</span><b>${rate(allHit, () => true, mStart)}</b></div>
-      <div><span>${t('total')}</span><b>${rate(allHit, () => true, START_DATE)}</b></div>
+      <div><span>${t('total')} ${fmt(STATS_DATE)}</span><b>${rate(allHit, () => true, STATS_DATE)}</b></div>
     </div></div>`;
   html += `<div class="tools"><button data-act="export">${t('exp')}</button>
     <label>${t('imp')}<input type="file" accept="application/json,.json" id="importFile" hidden></label></div>
@@ -359,6 +401,7 @@ async function importBackup(e) {
 // ---------- Shell ----------
 const TABS = [['daily', '☑️'], ['weekly', '🗓️'], ['monthly', '📅'], ['stats', '📈']];
 function render() {
+  endCache = null;
   document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
   document.getElementById('title').textContent = t('title');
   document.getElementById('lang').textContent = t('switchTo');
