@@ -16,15 +16,11 @@
     --muted: #6b7280;
     --border: #e5e7eb;
     --header-blue: #1987c7;
-    --peach: #fbe5d6;
-    --mint: #c5e0b4;
-    --pink: #f4cccc;
-    --sky: #75b8e8;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Helvetica Neue", sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
     background: var(--bg);
     color: var(--text);
     padding-top: env(safe-area-inset-top);
@@ -43,11 +39,7 @@
     justify-content: space-between;
     align-items: center;
   }
-  header h1 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 700;
-  }
+  header h1 { margin: 0; font-size: 18px; font-weight: 700; }
   .lang-btn {
     border: 1px solid var(--border);
     background: #fff;
@@ -58,11 +50,7 @@
     color: var(--text);
     cursor: pointer;
   }
-  main {
-    padding: 16px;
-    max-width: 680px;
-    margin: 0 auto;
-  }
+  main { padding: 16px; max-width: 680px; margin: 0 auto; }
   .nav-row {
     display: flex;
     justify-content: space-between;
@@ -83,17 +71,8 @@
     font-weight: 600;
     cursor: pointer;
   }
-  .nav-row button:disabled {
-    opacity: 0.35;
-    cursor: not-allowed;
-  }
-  .nav-title {
-    font-weight: 700;
-    font-size: 15px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
+  .nav-row button:disabled { opacity: 0.35; cursor: not-allowed; }
+  .nav-title { font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 8px; }
   input[type="date"] {
     border: 1px solid var(--border);
     border-radius: 8px;
@@ -103,8 +82,6 @@
     background: #fff;
     color: var(--text);
   }
-
-  /* DAILY VIEW */
   .habit-btn {
     width: 100%;
     border: 1.5px solid #1f2937;
@@ -118,28 +95,11 @@
     font-weight: 600;
     color: #111827;
     cursor: pointer;
-    transition: transform 0.08s ease;
   }
   .habit-btn:active { transform: scale(0.985); }
-  .habit-btn.done .habit-label {
-    text-decoration: line-through;
-    text-decoration-thickness: 2px;
-    opacity: 0.72;
-  }
-  .habit-btn.disabled-day {
-    opacity: 0.45;
-    border-style: dashed;
-    cursor: not-allowed;
-  }
-  .badge {
-    font-size: 12px;
-    font-weight: 600;
-    background: rgba(255,255,255,0.7);
-    padding: 3px 8px;
-    border-radius: 999px;
-  }
-
-  /* WEEKLY VIEW */
+  .habit-btn.done .habit-label { text-decoration: line-through; text-decoration-thickness: 2px; opacity: 0.72; }
+  .habit-btn.disabled-day { opacity: 0.45; border-style: dashed; cursor: not-allowed; }
+  .badge { font-size: 12px; font-weight: 600; background: rgba(255,255,255,0.7); padding: 3px 8px; border-radius: 999px; }
   .week-scroll {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -148,16 +108,8 @@
     border-radius: 12px;
     padding: 10px;
   }
-  .week-grid {
-    display: grid;
-    grid-template-columns: repeat(7, minmax(96px, 1fr));
-    gap: 4px;
-  }
-  .week-col {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
+  .week-grid { display: grid; grid-template-columns: repeat(7, minmax(96px, 1fr)); gap: 4px; }
+  .week-col { display: flex; flex-direction: column; gap: 4px; }
   .week-date-hdr {
     background: var(--header-blue);
     color: #fff;
@@ -180,23 +132,9 @@
     text-align: center;
     line-height: 1.2;
   }
-  .week-cell.done {
-    text-decoration: line-through;
-    text-decoration-thickness: 1.5px;
-    opacity: 0.75;
-  }
-  .week-cell.off-day {
-    opacity: 0.3;
-  }
-
-  /* MONTHLY VIEW */
-  .month-legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 12px;
-    font-size: 12px;
-  }
+  .week-cell.done { text-decoration: line-through; text-decoration-thickness: 1.5px; opacity: 0.75; }
+  .week-cell.off-day { opacity: 0.3; }
+  .month-legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; font-size: 12px; }
   .legend-item {
     display: flex;
     align-items: center;
@@ -206,101 +144,23 @@
     padding: 4px 8px;
     border-radius: 8px;
   }
-  .dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 3px;
-    border: 1px solid #374151;
-    flex-shrink: 0;
-  }
-  .month-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 4px;
-  }
-  .weekday-lbl {
-    text-align: center;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--muted);
-    padding-bottom: 4px;
-  }
-  .day-box {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    overflow: hidden;
-  }
-  .day-box-hdr {
-    background: var(--header-blue);
-    color: #fff;
-    font-size: 10px;
-    font-weight: 700;
-    text-align: center;
-    padding: 2px 0;
-  }
+  .dot { width: 12px; height: 12px; border-radius: 3px; border: 1px solid #374151; flex-shrink: 0; }
+  .month-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .weekday-lbl { text-align: center; font-size: 11px; font-weight: 700; color: var(--muted); padding-bottom: 4px; }
+  .day-box { background: var(--card); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .day-box-hdr { background: var(--header-blue); color: #fff; font-size: 10px; font-weight: 700; text-align: center; padding: 2px 0; }
   .day-box.out-range { opacity: 0.35; }
-  .mini-2x2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2px;
-    padding: 2px;
-  }
-  .mini-bar {
-    height: 18px;
-    border: 1px solid #1f2937;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+  .mini-2x2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; padding: 2px; }
+  .mini-bar { height: 18px; border: 1px solid #1f2937; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
   .mini-bar.off-day { opacity: 0.25; }
   .smile-svg { width: 13px; height: 13px; }
-
-  /* STATS VIEW */
-  .stat-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 16px;
-    margin-bottom: 12px;
-  }
-  .stat-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 16px;
-    font-weight: 700;
-    margin-bottom: 14px;
-  }
-  .stat-dot {
-    width: 14px;
-    height: 14px;
-    border-radius: 4px;
-    flex-shrink: 0;
-  }
-  .stat-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    row-gap: 14px;
-    column-gap: 12px;
-  }
-  .stat-lbl {
-    font-size: 12px;
-    color: var(--muted);
-    margin-bottom: 2px;
-  }
-  .stat-val {
-    font-size: 17px;
-    font-weight: 700;
-    color: var(--text);
-  }
-  .backup-box {
-    margin-top: 20px;
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-  }
+  .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 12px; }
+  .stat-header { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 700; margin-bottom: 14px; }
+  .stat-dot { width: 14px; height: 14px; border-radius: 4px; flex-shrink: 0; }
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; row-gap: 14px; column-gap: 12px; }
+  .stat-lbl { font-size: 12px; color: var(--muted); margin-bottom: 2px; }
+  .stat-val { font-size: 17px; font-weight: 700; color: var(--text); }
+  .backup-box { margin-top: 20px; display: flex; gap: 8px; justify-content: center; }
   .backup-box button {
     border: 1px solid var(--border);
     background: var(--card);
@@ -310,8 +170,6 @@
     color: var(--muted);
     cursor: pointer;
   }
-
-  /* BOTTOM TAB BAR */
   nav.tab-bar {
     position: fixed;
     bottom: 0;
@@ -347,48 +205,77 @@
 
 <header>
   <h1 id="app-title">Daily View</h1>
-  <button class="lang-btn" id="lang-toggle" onclick="toggleLang()">中文</button>
+  <button class="lang-btn" id="lang-toggle">中文</button>
 </header>
 
 <main id="app-content"></main>
 
 <nav class="tab-bar">
-  <button class="tab-btn active" data-tab="daily" onclick="switchTab('daily')">
+  <button class="tab-btn active" data-tab="daily">
     <span class="tab-icon">✓</span>
     <span id="tab-lbl-daily">Daily</span>
   </button>
-  <button class="tab-btn" data-tab="weekly" onclick="switchTab('weekly')">
+  <button class="tab-btn" data-tab="weekly">
     <span class="tab-icon">▦</span>
     <span id="tab-lbl-weekly">Weekly</span>
   </button>
-  <button class="tab-btn" data-tab="monthly" onclick="switchTab('monthly')">
+  <button class="tab-btn" data-tab="monthly">
     <span class="tab-icon">📅</span>
     <span id="tab-lbl-monthly">Monthly</span>
   </button>
-  <button class="tab-btn" data-tab="stats" onclick="switchTab('stats')">
+  <button class="tab-btn" data-tab="stats">
     <span class="tab-icon">📊</span>
     <span id="tab-lbl-stats">Stats</span>
   </button>
 </nav>
 
 <script>
-const MIN_DATE = "2026-10-01";
-const STORAGE_KEY = "my_habits_v1";
+const MIN_DATE = `2026-10-01`;
+const STORAGE_KEY = `my_habits_v1`;
 
 const HABITS = [
-  { id: "eng_test", en: "Daily English Test", zh: "每日英语测试", color: "#fbe5d6", weekdaysOnly: false },
-  { id: "eng_listen", en: "Daily English Listening", zh: "每日英语听力", color: "#c5e0b4", weekdaysOnly: true },
-  { id: "cardio", en: "Exercise 500 kJ", zh: "运动500KJ", color: "#f4cccc", weekdaysOnly: false },
-  { id: "strength", en: "Resistance Training", zh: "抗阻训练", color: "#75b8e8", weekdaysOnly: false }
+  { id: `eng_test`, en: `Daily English Test`, zh: `每日英语测试`, color: `#fbe5d6`, weekdaysOnly: false },
+  { id: `eng_listen`, en: `Daily English Listening`, zh: `每日英语听力`, color: `#c5e0b4`, weekdaysOnly: true },
+  { id: `cardio`, en: `Exercise 500 kJ`, zh: `运动500KJ`, color: `#f4cccc`, weekdaysOnly: false },
+  { id: `strength`, en: `Resistance Training`, zh: `抗阻训练`, color: `#75b8e8`, weekdaysOnly: false }
 ];
 
 const I18N = {
   en: {
-    daily: "Daily", weekly: "Weekly", monthly: "Monthly", stats: "Stats",
-    dailyTitle: "Daily View", weeklyTitle: "Weekly View", monthlyTitle: "Monthly View", statsTitle: "Statistics",
-    prev: "‹ Prev", next: "Next ›", today: "Today",
-    monFriOnly: "Mon–Fri only",
-    currentStreak: "Current streak", bestStreak: "Best streak",
-    thisMonth: "This month", sinceStart: "Since 2026/10/01",
-    dayUnit: "d",
-    weekdays: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    daily: `Daily`, weekly: `Weekly`, monthly: `Monthly`, stats: `Stats`,
+    dailyTitle: `Daily View`, weeklyTitle: `Weekly View`, monthlyTitle: `Monthly View`, statsTitle: `Statistics`,
+    prev: `‹ Prev`, next: `Next ›`,
+    monFriOnly: `Mon–Fri only`,
+    currentStreak: `Current streak`, bestStreak: `Best streak`,
+    thisMonth: `This month`, sinceStart: `Since 2026/10/01`,
+    dayUnit: `d`,
+    weekdays: [`Mon`, `Tue`, `Wed`, `Thu`, `Fri`, `Sat`, `Sun`],
+    exportBtn: `Export Backup`, importBtn: `Import Backup`,
+    importSuccess: `Backup restored!`, importFail: `Invalid backup file.`
+  },
+  zh: {
+    daily: `每日`, weekly: `每周`, monthly: `每月`, stats: `统计`,
+    dailyTitle: `每日视图`, weeklyTitle: `每周视图`, monthlyTitle: `每月视图`, statsTitle: `数据统计`,
+    prev: `‹ 上一期`, next: `下一期 ›`,
+    monFriOnly: `仅周一至周五`,
+    currentStreak: `当前连续`, bestStreak: `最长连续`,
+    thisMonth: `本月完成`, sinceStart: `自 2026/10/01 起`,
+    dayUnit: `天`,
+    weekdays: [`一`, `二`, `三`, `四`, `五`, `六`, `日`],
+    exportBtn: `导出备份`, importBtn: `导入备份`,
+    importSuccess: `数据已恢复！`, importFail: `备份文件无效。`
+  }
+};
+
+function safeGetStorage(key, fallback) {
+  try {
+    const val = localStorage.getItem(key);
+    return val !== null ? val : fallback;
+  } catch (e) {
+    return fallback;
+  }
+}
+
+function safeSetStorage(key, val) {
+  try {
+    localStorage.setItem(key, val);
